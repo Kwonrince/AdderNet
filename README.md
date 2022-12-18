@@ -6,6 +6,6 @@
 
 # How to use
 
-'''
+```python
 python main.py
-'''
+```
