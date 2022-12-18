@@ -1,4 +1,4 @@
-# addernet
+# AdderNet
 
 [official repository] https://github.com/huawei-noah/AdderNet
 
