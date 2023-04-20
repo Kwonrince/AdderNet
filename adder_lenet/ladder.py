@@ -23,22 +23,20 @@ class Ladd(Function):
         wout = (w - kernel_size + 2 * padding) // stride + 1
         npatch = hout * wout
         npatch_point = cin * npoint
-        # Tiled input (n, cin, kernel_size^2).
+        
         x_tiles = F.unfold(x.reshape(n * cin, 1, h, w),
                            kernel_size,
                            padding=padding,
                            stride=stride)
-        # `x_tiles` at this point is (n * cin, npoint, npatch).
         x_tiles = x_tiles.reshape((n, cin, npoint, npatch))
         x_tiles = x_tiles.permute(0, 3, 1, 2)
         x_tiles = x_tiles.reshape((n * npatch, npatch_point))
-        # `pat` at this point is (cout, cin, npoint).
+
         pat = pat.reshape(cout, npatch_point)
 
         x_tiles = x_tiles.unsqueeze(1).repeat(1, cout, 1)
         pat = pat.unsqueeze(0).repeat(n * npatch, 1, 1)
 
-        # (n * npatch, cout, npatch_point)
         minus_delta = pat - x_tiles
         minus_delta_mean = minus_delta.abs().sum(dim=2)
         y = - minus_delta_mean
@@ -48,8 +46,6 @@ class Ladd(Function):
         ctxt.kernel_size = kernel_size
         ctxt.padding = padding
         ctxt.stride = stride
-
-        #print("---", pat.min(), pat.mean(), pat.max())
 
         return y.contiguous().view(n, hout, wout, cout).permute(0,3,1,2)
     @staticmethod
@@ -64,14 +60,13 @@ class Ladd(Function):
                             ctxt.kernel_size,
                             padding=ctxt.padding,
                             stride=ctxt.stride)
-        # `dy_tiles` at this point is (n * cout, npoint, npatch).
+
         _, npoint, npatch = dy_tiles.size()
         dy_tiles = dy_tiles.reshape(n, cout, npoint, npatch).sum(axis=0).sum(axis=2)
         dpat = minus_delta * (-dy_tiles.unsqueeze(1).clamp(-1, 1))
         ita = 0.1 # This is the adder filter hyper-param but aint gonna use it.
         minus_delta_mag = ((minus_delta * minus_delta).sum(axis=(1, 2), keepdim=True)).sqrt()
         local_lr_coe = ita * np.sqrt(npatch_point) / minus_delta_mag
-        #print("///", dpat.min(), dpat.mean(), dpat.max())
 
         return (None, dpat * local_lr_coe, None, None, None, None, None)
 
@@ -85,7 +80,7 @@ class Ladder2D(nn.Module):
         self.nchannel_in = nchannel_in
         self.nchannel_out = nchannel_out
         self.kernel_size = kernel_size
-        # Pattern.
+
         pat_shape = (nchannel_out, nchannel_in, kernel_size * kernel_size)
         self.pat = Parameter(nn.init.uniform_(torch.randn(*pat_shape)))
 
