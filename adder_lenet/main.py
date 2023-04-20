@@ -17,6 +17,7 @@ parser = argparse.ArgumentParser(description='train-addernet')
 parser.add_argument('--data', type=str, default='./cache/data/')
 parser.add_argument('--output_dir', type=str, default='./cache/models/')
 parser.add_argument('--device', type=str, default='cuda')
+parser.add_argument('--mode', type=str, default='ann')
 parser.add_argument('--name', type=str, default='ANN-lenet5-mnist')
 parser.add_argument('--epoch', type=int, default=400)
 args = parser.parse_args()
@@ -41,7 +42,12 @@ test_data = MNIST('./data/mnist',
 train_loader = DataLoader(train_data, batch_size=256, shuffle=True, num_workers=2)
 test_loader = DataLoader(test_data, batch_size=256, num_workers=2)
 
-net = LeNet_add().to(device)
+if args.mode == 'cnn':
+    net = LeNet().to(device)
+elif args.mode == 'ann':
+    net = LeNet_add().to(device)
+else:
+    raise Exception("Invalid mode")
 criterion = nn.CrossEntropyLoss().to(device)
 optimizer = optim.SGD(net.parameters(), lr=0.1, momentum=0.9, nesterov=True, weight_decay=5e-4)
 NEPOCHE = args.epoch
