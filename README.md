@@ -9,6 +9,7 @@ CVPR 2020에 발표된 ["AdderNet: Do We Really Need Multiplications in Deep Lea
 - `./adder_lenet/` : LeNet-ANN, LeNet-CNN을 MNIST 데이터셋으로 학습
 - `./adder_resnet/` : ResNet-ANN, ResNet-CNN을 CIFAR10 데이터셋으로 학습
 
+------------------- 
 # Usage
 ## Requirements
 - python 3
