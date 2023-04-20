@@ -17,6 +17,7 @@ parser = argparse.ArgumentParser(description='train-addernet')
 parser.add_argument('--data', type=str, default='./cache/data/')
 parser.add_argument('--output_dir', type=str, default='./cache/models/')
 parser.add_argument('--device', type=str, default='cuda')
+parser.add_argument('--mode', type=str, default='cnn')
 parser.add_argument('--name', type=str, default='ANN-resnet20-cifar10')
 parser.add_argument('--epoch', type=int, default=50)
 args = parser.parse_args()
@@ -50,7 +51,12 @@ data_test = CIFAR10(args.data,
 data_train_loader = DataLoader(data_train, batch_size=256, shuffle=True, num_workers=8)
 data_test_loader = DataLoader(data_test, batch_size=100, num_workers=0)
 
-net = resnet20_add().to(device)
+if args.mode == 'cnn':
+    net = resnet20().to(device)
+elif args.mode == 'ann':
+    net = resnet20_add().to(device)
+else:
+    raise Exception("Invalid mode")
 criterion = torch.nn.CrossEntropyLoss().to(device)
 optimizer = torch.optim.SGD(net.parameters(), lr=0.1, momentum=0.9, weight_decay=5e-4)
 
