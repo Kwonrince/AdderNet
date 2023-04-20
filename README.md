@@ -54,7 +54,8 @@ $ python latency.py
 ```
 
 ## Results
-학습 결과는 [wandb log](https://wandb.ai/kwonrince/Addernet/overview?workspace=user-kwonrince)에서 확인 가능합니다.
+자세한 학습 결과는 [wandb log](https://wandb.ai/kwonrince/Addernet/overview?workspace=user-kwonrince)에서 확인 가능합니다.
+
 - LeNet
 ![image](https://user-images.githubusercontent.com/72617445/233326795-606d378b-073b-4725-85be-241220656ba3.png)
 
