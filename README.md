@@ -12,7 +12,7 @@ CVPR 2020에 발표된 ["AdderNet: Do We Really Need Multiplications in Deep Lea
 ------------------- 
 # Usage
 ## Requirements
-- python 3
+- python3
 - pytorch >= 1.1.0
 - torchvision
 
